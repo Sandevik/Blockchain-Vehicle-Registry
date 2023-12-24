@@ -36,6 +36,10 @@ contract Registry {
         entry.transfer(_licensePlateNr, msg.sender, _to);
     }
 
+    function getEntryCount() external view onlyAllowedEditors returns(uint256) {
+        return entry.getCount();
+    }
+
     //-------------- Change permissions ------------------------------------
 
     function addAllowedEditor(address _address) external onlyAllowedEditors returns(uint256 index) {
@@ -82,7 +86,7 @@ contract Registry {
                 break;
             }
         }
-        require(isAllowed == true, "You do not have permission to change this value.");
+        require(isAllowed == true, "You do not have permission to change or view this value.");
         _;
     }
 }

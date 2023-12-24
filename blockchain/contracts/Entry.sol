@@ -53,6 +53,10 @@ contract Entry {
         itemsCount -= 1;
     }
 
+    function getCount() external view returns(uint256) {
+        return itemsCount;
+    }
+
     modifier onlyOwner(string memory _licensePlateNr, address _currentOwner) {
         require(_currentOwner == items[_licensePlateNr].owner, "Error: You do not own this item.");
         _;
