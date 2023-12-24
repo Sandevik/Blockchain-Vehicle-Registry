@@ -3,6 +3,14 @@ pragma solidity ^0.8.19;
 
 contract Entry {
 
+    enum Type {
+        CAR,
+        BOAT,
+        MOTORCYCLE,
+        BUSS,
+        TRUCK
+    }
+
     mapping(string => Item) public items;
     uint256 itemsCount = 0;
 
@@ -10,7 +18,7 @@ contract Entry {
         string[] images;
         string make;
         string model;
-        string Type;
+        Type Type;
         string licensePlateNr;
         uint8 allowedPassengers;
         uint16 year;
@@ -21,7 +29,7 @@ contract Entry {
 
     constructor() payable {}
 
-    function newEntry(address _owner, string[] memory _images, string memory _make, string memory _model, string memory _type, string memory _licensePlateNr, uint8 _allowedPassengers, uint16 _year, string memory _color) external payable {
+    function newEntry(address _owner, string[] memory _images, string memory _make, string memory _model, Type _type, string memory _licensePlateNr, uint8 _allowedPassengers, uint16 _year, string memory _color) external payable {
         Item memory item = Item({
             images: _images,
             make: _make,

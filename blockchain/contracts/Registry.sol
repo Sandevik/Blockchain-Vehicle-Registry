@@ -5,7 +5,7 @@ import "./Entry.sol";
 contract Registry {
 
     //create instance of Entry contract.
-    Entry entry = new Entry();
+    Entry private entry = new Entry();
     
     //the superUser
     address private superUser;
@@ -20,7 +20,7 @@ contract Registry {
 
     // --------------- Registry functions ------------------------------
 
-    function register(address _initialOwner, string[] memory _images, string memory _make, string memory _model, string memory _type, string memory _licensePlateNr, uint8 _allowedPassengers, uint16 _year, string memory _color) external payable onlyAllowedEditors {
+    function register(address _initialOwner, string[] memory _images, string memory _make, string memory _model, Entry.Type _type, string memory _licensePlateNr, uint8 _allowedPassengers, uint16 _year, string memory _color) external payable onlyAllowedEditors {
         entry.newEntry(_initialOwner, _images, _make, _model, _type, _licensePlateNr, _allowedPassengers, _year, _color);
     }
 
