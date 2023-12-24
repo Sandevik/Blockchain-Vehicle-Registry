@@ -1,52 +1,41 @@
 //SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.19;
+import "./Entry.sol";
 
 contract Registry {
+
+    Entry entry = new Entry();
     //the superUser
     address private superUser;
 
     //Could be both bots or real people connected to an authority like transportstyrelsen.
     address[] private allowedEditors;
-
-    //Mapping of licensePlateNumber to Entry struct
-    mapping(string => Entry) public registry;
     
-    struct Entry {
-        string[] images;
-        string make;
-        string model;
-        string licensePlateNr;
-        uint8 allowedPassengers;
-        uint16 year;
-        string color;
-        address[] prevOwners;
-        address currentOwner;
-    }
-
-    constructor(){
+    constructor() payable {
         superUser = msg.sender;
-        allowedEditors[0] = msg.sender;
+        allowedEditors.push(msg.sender);
     }
 
 
     // --------------- Registry functions ------------------------------
 
     //adds a new item to the registry
-    function register() external onlyAllowedEditors {
-
+    function register(address _initialOwner, string[] memory _images, string memory _make, string memory _model, string memory _type, string memory _licensePlateNr, uint8 _allowedPassengers, uint16 _year, string memory _color) external payable onlyAllowedEditors {
+        entry.newEntry(_initialOwner, _images, _make, _model, _type, _licensePlateNr, _allowedPassengers, _year, _color);
     }
 
     //removes an item from the registry
-    function burnRegister() external onlyAllowedEditors {
-
+    function burn(string memory _licensePlateNr) external payable onlyAllowedEditors {
+        entry.burnEntry(_licensePlateNr);
     }
 
-    //function transferOwnerShip() external onlyOwner {
+    function see(string memory _licensePlateNr) external view returns(Entry.Item memory) {
+        return entry.viewEntry(_licensePlateNr);
+    }
 
-    //}
-
-
-
+    function transfer(string memory _licensePlateNr, address _to) external payable {
+        entry.transfer(_licensePlateNr, msg.sender, _to);
+    }
 
 
     //-------------- Change permissions ------------------------------------
@@ -74,17 +63,6 @@ contract Registry {
     function changeSuperUser(address _newAddress) external onlySuperUser {
         superUser = _newAddress;
     }
-
-
-
-
-
-
-    // ------------- Helpers --------------------------------------------------
-
-    
-
-
 
 
     // ---------------- modifiers -----------------------------------
