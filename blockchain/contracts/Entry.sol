@@ -39,7 +39,6 @@ contract Entry {
         itemsCount += 1;
     }
 
-
     function transfer(string memory _licensePlateNr, address _currentOwner, address _to) external payable onlyOwner(_licensePlateNr, _currentOwner) {
         items[_licensePlateNr].owner = _to;
         items[_licensePlateNr].prevOwnersCount += 1;
@@ -53,7 +52,6 @@ contract Entry {
         delete items[_licensePlateNr];
         itemsCount -= 1;
     }
-
 
     modifier onlyOwner(string memory _licensePlateNr, address _currentOwner) {
         require(_currentOwner == items[_licensePlateNr].owner, "Error: You do not own this item.");

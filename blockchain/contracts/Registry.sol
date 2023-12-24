@@ -4,7 +4,9 @@ import "./Entry.sol";
 
 contract Registry {
 
+    //create instance of Entry contract.
     Entry entry = new Entry();
+    
     //the superUser
     address private superUser;
 
@@ -16,15 +18,12 @@ contract Registry {
         allowedEditors.push(msg.sender);
     }
 
-
     // --------------- Registry functions ------------------------------
 
-    //adds a new item to the registry
     function register(address _initialOwner, string[] memory _images, string memory _make, string memory _model, string memory _type, string memory _licensePlateNr, uint8 _allowedPassengers, uint16 _year, string memory _color) external payable onlyAllowedEditors {
         entry.newEntry(_initialOwner, _images, _make, _model, _type, _licensePlateNr, _allowedPassengers, _year, _color);
     }
 
-    //removes an item from the registry
     function burn(string memory _licensePlateNr) external payable onlyAllowedEditors {
         entry.burnEntry(_licensePlateNr);
     }
@@ -36,7 +35,6 @@ contract Registry {
     function transfer(string memory _licensePlateNr, address _to) external payable {
         entry.transfer(_licensePlateNr, msg.sender, _to);
     }
-
 
     //-------------- Change permissions ------------------------------------
 
@@ -64,7 +62,6 @@ contract Registry {
         superUser = _newAddress;
     }
 
-
     // ---------------- modifiers -----------------------------------
 
     modifier onlySuperUser() {
@@ -88,7 +85,5 @@ contract Registry {
         require(isAllowed == true, "You do not have permission to change this value.");
         _;
     }
-
-
 }
 
