@@ -7,7 +7,7 @@ contract Entry {
         CAR,
         BOAT,
         MOTORCYCLE,
-        BUSS,
+        BUS,
         TRUCK
     }
 
