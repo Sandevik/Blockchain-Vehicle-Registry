@@ -13,18 +13,18 @@ contract Registry {
     //Could be both bots or real people connected to an authority like transportstyrelsen.
     address[] private allowedEditors;
     
-    constructor() payable {
+    constructor() {
         superUser = msg.sender;
         allowedEditors.push(msg.sender);
     }
 
     // --------------- Registry functions ------------------------------
 
-    function register(address _initialOwner, string[] memory _images, string memory _make, string memory _model, Entry.Type _type, string memory _licensePlateNr, uint8 _allowedPassengers, uint16 _year, string memory _color) external payable onlyAllowedEditors {
+    function register(address _initialOwner, string[] memory _images, string memory _make, string memory _model, Entry.Type _type, string memory _licensePlateNr, uint8 _allowedPassengers, uint16 _year, string memory _color) external onlyAllowedEditors {
         entry.newEntry(_initialOwner, _images, _make, _model, _type, _licensePlateNr, _allowedPassengers, _year, _color);
     }
 
-    function burn(string memory _licensePlateNr) external payable onlyAllowedEditors {
+    function burn(string memory _licensePlateNr) external onlyAllowedEditors {
         entry.burnEntry(_licensePlateNr);
     }
 
@@ -32,7 +32,11 @@ contract Registry {
         return entry.viewEntry(_licensePlateNr);
     }
 
-    function transfer(string memory _licensePlateNr, address _to) external payable {
+    function editLicensePlate(string memory _currentLicensePlateNr, string memory _newLicensePlateNr) external {
+        entry.editLicensePlate(_currentLicensePlateNr, _newLicensePlateNr, msg.sender);
+    }
+
+    function transfer(string memory _licensePlateNr, address _to) external {
         entry.transfer(_licensePlateNr, msg.sender, _to);
     }
 
