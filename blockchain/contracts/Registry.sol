@@ -94,4 +94,3 @@ contract Registry {
         _;
     }
 }
-

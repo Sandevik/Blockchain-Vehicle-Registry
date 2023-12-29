@@ -75,6 +75,46 @@ contract Entry {
         return itemsCount;
     }
 
+     // ----------------- Helper functions -------------------------------
+
+    function stringToUint(string memory s) private pure returns (uint) {
+        bytes memory b = bytes(s);
+        uint result = 0;
+        for (uint256 i = 0; i < b.length; i++) {
+            uint256 c = uint256(uint8(b[i]));
+            if (c >= 48 && c <= 57) {
+                result = result * 10 + (c - 48);
+            }
+        }
+        return result;
+    }
+
+    function getSlice(uint256 begin, uint256 end, string memory text) private pure returns (string memory) {
+        bytes memory a = new bytes(end-begin+1);
+        for(uint i=0;i<=end-begin;i++){
+            a[i] = bytes(text)[i+begin-1];
+        }
+        return string(a);    
+    }
+
+    // -------------- Modifiers ------------------------------------------------
+
+    modifier validateLicensePlateNr(string memory _licensePlateNr) {
+        bytes memory b = bytes(_licensePlateNr);
+        require(bytes(_licensePlateNr).length == 6, "ERROR: License plate length is invalid.");
+
+        require(
+            b.length == 6 
+            && (stringToUint(getSlice(0,1, _licensePlateNr)) >= 65 && stringToUint(getSlice(0,1, _licensePlateNr)) <= 90 || stringToUint(getSlice(0,1, _licensePlateNr)) == 196 || stringToUint(getSlice(0,1, _licensePlateNr)) == 197 || stringToUint(getSlice(0,1, _licensePlateNr)) == 214) 
+            && (stringToUint(getSlice(1,2, _licensePlateNr)) >= 65 && stringToUint(getSlice(1,2, _licensePlateNr)) <= 90 || stringToUint(getSlice(1,2, _licensePlateNr)) == 196 || stringToUint(getSlice(1,2, _licensePlateNr)) == 197 || stringToUint(getSlice(1,2, _licensePlateNr)) == 214) 
+            && (stringToUint(getSlice(2,3, _licensePlateNr)) >= 65 && stringToUint(getSlice(2,3, _licensePlateNr)) <= 90 || stringToUint(getSlice(2,3, _licensePlateNr)) == 196 || stringToUint(getSlice(2,3, _licensePlateNr)) == 197 || stringToUint(getSlice(2,3, _licensePlateNr)) == 214) 
+            && (stringToUint(getSlice(3,4, _licensePlateNr)) >= 48 && stringToUint(getSlice(3,4, _licensePlateNr)) <= 57)
+            && (stringToUint(getSlice(4,5, _licensePlateNr)) >= 48 && stringToUint(getSlice(4,5, _licensePlateNr)) <= 57)
+            && ((stringToUint(getSlice(5,6, _licensePlateNr)) >= 65 && stringToUint(getSlice(5,6, _licensePlateNr)) <= 90 || stringToUint(getSlice(5,6, _licensePlateNr)) == 196 || stringToUint(getSlice(5,6, _licensePlateNr)) == 197 || stringToUint(getSlice(5,6, _licensePlateNr)) == 214) || (stringToUint(getSlice(5,6, _licensePlateNr)) >= 48 && stringToUint(getSlice(5,6, _licensePlateNr)) <= 57))
+            , "ERROR: Invalid license plate format, correct format: ABC123 or ABC12D");
+        _;
+    }
+
     modifier onlyOwner(string memory _licensePlateNr, address _currentOwner) {
         require(_currentOwner == items[_licensePlateNr].owner, "Error: You do not own this item.");
         _;
